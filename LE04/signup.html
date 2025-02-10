@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="PT-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tzeeter Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Menu Esquerdo -->
+            <nav class="col-md-3 p-3 bg-light">
+                <div class="text-center mb-4">
+                    <i class="fa-solid fa-dove fa-2x text-primary"></i>
+                </div>
+                <ul class="list-unstyled">
+                    <li class="mb-3">
+                        <a href="#" class="btn btn-outline-primary w-100 text-start d-flex align-items-center">
+                            <i class="fa-solid fa-house me-2"></i> Home
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a href="#" class="btn btn-outline-primary w-100 text-start d-flex align-items-center">
+                            <i class="fa-solid fa-hashtag me-2"></i> Explore
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a href="#" class="btn btn-outline-primary w-100 text-start d-flex align-items-center">
+                            <i class="fa-solid fa-bell me-2"></i> Notifications
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a href="#" class="btn btn-outline-primary w-100 text-start d-flex align-items-center">
+                            <i class="fa-solid fa-envelope me-2"></i> Messages
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a href="#" class="btn btn-outline-primary w-100 text-start d-flex align-items-center">
+                            <i class="fa-solid fa-user me-2"></i> Profile
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a href="#" class="btn btn-outline-primary w-100 text-start d-flex align-items-center">
+                            <i class="fa-solid fa-ellipsis me-2"></i> More
+                        </a>
+                    </li>
+                </ul>
+                <button class="btn btn-primary w-100">Tzeetar</button>
+            </nav>
+            
+            <!-- Conteúdo Central -->
+            <main class="col-md-6 p-3">
+                <h1>Home</h1>
+                <section class="tzeet-box border rounded p-3 mb-3">
+                    <div class="d-flex align-items-start">
+                        <img src="img/profile.png" alt="User Photo" class="rounded-circle me-3" width="64" height="64">
+                        <div class="w-100">
+                            <textarea class="form-control" id="tzeetInput" placeholder="O que você está pensando?" rows="2"></textarea>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <div class="multimedia-icons d-flex gap-2">
+                                    <i class="fa-solid fa-image"></i>
+                                    <i class="fa-solid fa-chart-bar"></i>
+                                    <i class="fa-solid fa-calendar"></i>
+                                    <i class="fa-solid fa-map-marker-alt"></i>
+                                    <i class="fa-solid fa-smile"></i>
+                                    <i class="fa-solid fa-gift"></i>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <span id="charCount">140</span>
+                                    <button class="btn btn-primary ms-2" id="sendTzeet" disabled>Enviar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section id="tzeetFeed"></section>
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const tzeetInput = document.getElementById("tzeetInput");
+            const sendTzeet = document.getElementById("sendTzeet");
+            const charCount = document.getElementById("charCount");
+            const tzeetFeed = document.getElementById("tzeetFeed");
+            const maxChars = 140;
+            
+            tzeetInput.addEventListener("input", function () {
+                let remaining = maxChars - tzeetInput.value.length;
+                charCount.textContent = remaining;
+                
+                if (remaining < 0) {
+                    charCount.style.color = "rgb(255, 0, 0)";
+                    sendTzeet.disabled = true;
+                } else if (remaining < 40) {
+                    charCount.style.color = "rgb(255, 200, 0)";
+                    sendTzeet.disabled = false;
+                } else {
+                    charCount.style.color = "black";
+                    sendTzeet.disabled = false;
+                }
+            });
+            
+            sendTzeet.addEventListener("click", function () {
+                if (tzeetInput.value.trim() !== "" && tzeetInput.value.length <= maxChars) {
+                    const newTzeet = document.createElement("article");
+                    newTzeet.classList.add("tzeet", "border", "rounded", "p-3", "mb-3");
+                    newTzeet.innerHTML = `
+                        <div class="d-flex align-items-center">
+                            <img src="img/profile.png" alt="User Photo" class="rounded-circle me-3" width="32" height="32">
+                            <div>
+                                <h6 class="mb-0">Usuário Exemplo</h6>
+                                <small class="text-muted">@usuario - Agora</small>
+                            </div>
+                        </div>
+                        <p class="mt-2">${tzeetInput.value}</p>
+                    `;
+                    tzeetFeed.prepend(newTzeet);
+                    tzeetInput.value = "";
+                    charCount.textContent = maxChars;
+                    charCount.style.color = "black";
+                    sendTzeet.disabled = true;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
